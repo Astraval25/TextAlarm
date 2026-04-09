@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:timePickerMode="spinner" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Reminder message (spoken aloud)"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/messageInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. Wake up, take your vitamins"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="3" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Repeat"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox android:id="@+id/dayMon" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Mo" />
+            <CheckBox android:id="@+id/dayTue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Tu" />
+            <CheckBox android:id="@+id/dayWed" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="We" />
+            <CheckBox android:id="@+id/dayThu" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Th" />
+            <CheckBox android:id="@+id/dayFri" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Fr" />
+            <CheckBox android:id="@+id/daySat" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sa" />
+            <CheckBox android:id="@+id/daySun" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Su" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/vibrateCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Vibrate" />
+
+        <CheckBox
+            android:id="@+id/ttsCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repeat spoken message aloud" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
