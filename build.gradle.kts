@@ -5,3 +5,9 @@ plugins {
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.ksp) apply false
 }
+
+layout.buildDirectory.set(rootProject.layout.projectDirectory.dir(".gradle-build"))
+
+subprojects {
+    layout.buildDirectory.set(rootProject.layout.buildDirectory.dir(name))
+}

@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="primary">#0F5E5A</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="primary_container">#CDEDEA</color>
+    <color name="on_primary_container">#103B39</color>
+
+    <color name="secondary">#DD7B36</color>
+    <color name="on_secondary">#FFFFFFFF</color>
+    <color name="secondary_container">#FBE2CC</color>
+    <color name="on_secondary_container">#5B3110</color>
+
+    <color name="surface">#FFFFFC</color>
+    <color name="surface_variant">#EEF3F0</color>
+    <color name="background">#FFF8F1</color>
+    <color name="on_surface">#182321</color>
+    <color name="on_surface_variant">#5B6D69</color>
+    <color name="outline">#CCD5D1</color>
+
+    <color name="main_gradient_start">#FFF8F1</color>
+    <color name="main_gradient_end">#EAF5EF</color>
+    <color name="hero_gradient_start">#CDEDEA</color>
+    <color name="hero_gradient_end">#FBE2CC</color>
+
+    <color name="badge_primary_fill">#D7F0EE</color>
+    <color name="badge_primary_text">#114D49</color>
+    <color name="badge_neutral_fill">#F4EFE8</color>
+    <color name="badge_neutral_text">#625A4F</color>
+
+    <color name="alarm_bg_start">#173541</color>
+    <color name="alarm_bg_end">#091219</color>
+    <color name="alarm_card_fill">#332B4654</color>
+    <color name="alarm_button_primary">#FFD36B</color>
+    <color name="alarm_button_primary_text">#332100</color>
+    <color name="alarm_button_secondary">#1E4351</color>
+    <color name="alarm_button_secondary_text">#E7F6F8</color>
+
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
 </resources>

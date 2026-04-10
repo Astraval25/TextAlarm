@@ -94,3 +94,27 @@ Provide:
 
 Important:
 This is not a basic demo app. Design it like a real product that users can depend on daily for task reminders and location-based alerts.
+
+# Run Command 
+From the project root in PowerShell, use:
+
+```powershell
+.\gradlew.bat installDebug
+& "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" shell am start -n com.astraval.brightalarm/.MainActivity
+```
+
+If you just want to build the APK without installing:
+
+```powershell
+.\gradlew.bat assembleDebug
+# or
+ .\gradlew.bat assembleDebug --console=plain --no-daemon
+# or
+.\gradlew.bat --stop; .\gradlew.bat assembleDebug --console=plain --no-daemon
+```
+view the file
+```bash
+ii .\.gradle-build\app\outputs\apk\debug
+```
+
+This assumes an Android device or emulator is already connected. If `adb` isn’t found, make sure the Android SDK `platform-tools` are installed.

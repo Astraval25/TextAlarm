@@ -183,6 +183,19 @@ class AlarmService : Service() {
 
     private fun stopAlarm() {
         isAlarmActive = false
+        releaseAlarmResources()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
+    override fun onDestroy() {
+        isAlarmActive = false
+        releaseAlarmResources()
+        super.onDestroy()
+        scope.coroutineContext[Job]?.cancel()
+    }
+
+    private fun releaseAlarmResources() {
         repeatSpeechJob?.cancel()
         repeatSpeechJob = null
         runCatching { tts?.stop() }
@@ -197,14 +210,6 @@ class AlarmService : Service() {
         runCatching { vib.cancel() }
         wakeLock?.let { if (it.isHeld) it.release() }
         wakeLock = null
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
-    }
-
-    override fun onDestroy() {
-        stopAlarm()
-        super.onDestroy()
-        scope.coroutineContext[Job]?.cancel()
     }
 
     companion object {

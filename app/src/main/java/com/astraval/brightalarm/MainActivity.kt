@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -19,6 +20,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.astraval.brightalarm.data.Alarm
 import com.astraval.brightalarm.databinding.ActivityMainBinding
 import com.astraval.brightalarm.ui.edit.EditAlarmActivity
 import com.astraval.brightalarm.ui.main.AlarmAdapter
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity() {
         )
         binding.alarmsRecycler.layoutManager = LinearLayoutManager(this)
         binding.alarmsRecycler.adapter = adapter
+        binding.alarmsRecycler.setHasFixedSize(true)
 
         binding.addAlarmFab.setOnClickListener {
             startActivity(Intent(this, EditAlarmActivity::class.java))
@@ -75,8 +78,9 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.alarms.collect { list ->
                     adapter.submitList(list)
-                    binding.emptyText.visibility =
-                        if (list.isEmpty()) android.view.View.VISIBLE else android.view.View.GONE
+                    binding.emptyState.visibility =
+                        if (list.isEmpty()) View.VISIBLE else View.GONE
+                    binding.summaryText.text = buildSummary(list)
                 }
             }
         }
@@ -103,6 +107,16 @@ class MainActivity : AppCompatActivity() {
                     .setNegativeButton("Later", null)
                     .show()
             }
+        }
+    }
+
+    private fun buildSummary(alarms: List<Alarm>): String {
+        val enabledCount = alarms.count { it.isEnabled }
+        return when {
+            alarms.isEmpty() -> "No alarms scheduled"
+            enabledCount == 0 -> "All alarms are paused"
+            enabledCount == 1 -> "1 alarm is ready"
+            else -> "$enabledCount alarms are ready"
         }
     }
 }
