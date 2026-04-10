@@ -79,20 +79,6 @@
                 android:textStyle="bold"
                 tools:text="Weekdays" />
 
-            <TextView
-                android:id="@+id/voiceText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_badge_primary"
-                android:paddingStart="12dp"
-                android:paddingTop="7dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="7dp"
-                android:text="Voice loop"
-                android:textColor="@color/badge_primary_text"
-                android:textSize="12sp"
-                android:textStyle="bold" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

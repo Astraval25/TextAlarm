@@ -26,7 +26,6 @@ class AlarmAdapter(
         holder.b.timeText.text = a.timeFormatted
         holder.b.labelText.text = a.message.ifBlank { a.label.ifBlank { "Alarm" } }
         holder.b.daysText.text = formatRepeat(a.repeatDays)
-        holder.b.voiceText.text = if (a.isVibrate) "Voice + vibrate" else "Voice loop"
         holder.b.enabledSwitch.setOnCheckedChangeListener(null)
         holder.b.enabledSwitch.isChecked = a.isEnabled
         holder.b.enabledSwitch.setOnCheckedChangeListener { _, checked -> onToggle(a, checked) }

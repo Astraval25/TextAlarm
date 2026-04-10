@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -16,6 +17,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -44,11 +47,40 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val rootStartPadding = binding.root.paddingLeft
+        val rootTopPadding = binding.root.paddingTop
+        val rootEndPadding = binding.root.paddingRight
+        val rootBottomPadding = binding.root.paddingBottom
+        val headerTopPadding = binding.headerContainer.paddingTop
+        val recyclerBottomPadding = binding.alarmsRecycler.paddingBottom
+        val emptyStateBottomPadding = binding.emptyState.paddingBottom
+        val fabBottomMargin =
+            (binding.addAlarmFab.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            val horizontalInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            val topInsets = insets.getInsets(
+                WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            val bottomInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            v.setPadding(
+                rootStartPadding + horizontalInsets.left,
+                rootTopPadding,
+                rootEndPadding + horizontalInsets.right,
+                rootBottomPadding
+            )
+            binding.headerContainer.updatePadding(top = headerTopPadding + topInsets.top)
+            binding.alarmsRecycler.updatePadding(bottom = recyclerBottomPadding + bottomInsets.bottom)
+            binding.emptyState.updatePadding(bottom = emptyStateBottomPadding + bottomInsets.bottom)
+            binding.addAlarmFab.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = fabBottomMargin + bottomInsets.bottom
+            }
             insets
         }
+        ViewCompat.requestApplyInsets(binding.root)
 
         adapter = AlarmAdapter(
             onToggle = viewModel::toggle,

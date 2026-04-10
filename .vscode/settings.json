@@ -1,3 +1,11 @@
 {
-  "java.configuration.updateBuildConfiguration": "interactive"
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.import.exclusions": [
+    "**/build/**",
+    "**/.gradle-build/**"
+  ],
+  "files.watcherExclude": {
+    "**/build/**": true,
+    "**/.gradle-build/**": true
+  }
 }

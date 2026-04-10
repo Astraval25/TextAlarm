@@ -114,7 +114,7 @@ If you just want to build the APK without installing:
 ```
 view the file
 ```bash
-ii .\.gradle-build\app\outputs\apk\debug
+ii .\app\build\outputs\apk\debug
 ```
 
 This assumes an Android device or emulator is already connected. If `adb` isn’t found, make sure the Android SDK `platform-tools` are installed.
