@@ -15,6 +15,7 @@
         android:padding="20dp">
 
         <TextView
+            android:id="@+id/editorEyebrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
@@ -24,6 +25,7 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/editorTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -49,6 +51,7 @@
                 android:padding="24dp">
 
                 <TextView
+                    android:id="@+id/scheduleSectionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wake-up time"
@@ -57,12 +60,30 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/scheduleSectionDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:text="Pick a time that should start the repeated spoken message."
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="14sp" />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/specificDateCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Specific date task alarm"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/pickDateTimeButton"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Pick date and time"
+                    android:visibility="gone" />
 
                 <TimePicker
                     android:id="@+id/timePicker"
@@ -91,12 +112,34 @@
                 android:padding="24dp">
 
                 <TextView
+                    android:id="@+id/messageSectionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Spoken message"
+                    android:text="Task and spoken message"
                     android:textColor="?attr/colorOnSurface"
                     android:textSize="18sp"
                     android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/taskTitleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:hint="Task title"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="22dp"
+                    app:boxCornerRadiusBottomStart="22dp"
+                    app:boxCornerRadiusTopEnd="22dp"
+                    app:boxCornerRadiusTopStart="22dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/taskTitleInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Submit assignment"
+                        android:inputType="textCapSentences"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -117,10 +160,171 @@
                         android:inputType="textMultiLine|textCapSentences"
                         android:maxLines="4" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/taskNotesLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:hint="Notes"
+                    android:visibility="gone"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="22dp"
+                    app:boxCornerRadiusBottomStart="22dp"
+                    app:boxCornerRadiusTopEnd="22dp"
+                    app:boxCornerRadiusTopStart="22dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/taskNotesInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Add details, links, or checklist notes."
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:maxLines="5" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/taskRepeatCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Task repeat"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Choose how often this task should come back after it rings."
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp" />
+
+                <Spinner
+                    android:id="@+id/taskRepeatPresetSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="14dp" />
+
+                <LinearLayout
+                    android:id="@+id/taskCustomRepeatContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:hint="Every"
+                            app:boxBackgroundMode="outline"
+                            app:boxCornerRadiusBottomEnd="22dp"
+                            app:boxCornerRadiusBottomStart="22dp"
+                            app:boxCornerRadiusTopEnd="22dp"
+                            app:boxCornerRadiusTopStart="22dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/taskRepeatIntervalInput"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:text="1" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Spinner
+                            android:id="@+id/taskRepeatUnitSpinner"
+                            android:layout_width="0dp"
+                            android:layout_height="58dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <GridLayout
+                    android:id="@+id/taskWeekdayGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:columnCount="4"
+                    android:rowCount="2"
+                    android:useDefaultMargins="true"
+                    android:visibility="gone">
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/taskDayMon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mon" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/taskDayTue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tue" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/taskDayWed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wed" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/taskDayThu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thu" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/taskDayFri"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fri" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/taskDaySat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sat" />
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/taskDaySun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sun" />
+                </GridLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/repeatCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

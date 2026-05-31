@@ -36,11 +36,9 @@ class AlarmReceiver : BroadcastReceiver() {
                 } else {
                     context.startService(svcIntent)
                 }
-                // If repeating, schedule next occurrence
-                if (alarm.repeatDays.isNotEmpty() && alarm.isEnabled) {
+                if (alarm.isEnabled && (alarm.repeatDays.isNotEmpty() || alarm.isRepeatingTask)) {
                     scheduler.schedule(alarm)
-                } else if (alarm.repeatDays.isEmpty()) {
-                    // one-shot: mark disabled
+                } else {
                     repository.setEnabled(alarm, false)
                 }
             } finally {

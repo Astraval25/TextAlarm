@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -17,7 +16,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -34,9 +32,13 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private enum class HomeTab { ALARMS, TASKS }
+
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
     private lateinit var adapter: AlarmAdapter
+    private var selectedTab: HomeTab = HomeTab.ALARMS
+    private var latestAlarms: List<Alarm> = emptyList()
 
     private val notifPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -54,8 +56,7 @@ class MainActivity : AppCompatActivity() {
         val headerTopPadding = binding.headerContainer.paddingTop
         val recyclerBottomPadding = binding.alarmsRecycler.paddingBottom
         val emptyStateBottomPadding = binding.emptyState.paddingBottom
-        val fabBottomMargin =
-            (binding.addAlarmFab.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
+        val bottomNavBottomPadding = binding.bottomNav.paddingBottom
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val horizontalInsets = insets.getInsets(
@@ -73,11 +74,13 @@ class MainActivity : AppCompatActivity() {
                 rootBottomPadding
             )
             binding.headerContainer.updatePadding(top = headerTopPadding + topInsets.top)
-            binding.alarmsRecycler.updatePadding(bottom = recyclerBottomPadding + bottomInsets.bottom)
-            binding.emptyState.updatePadding(bottom = emptyStateBottomPadding + bottomInsets.bottom)
-            binding.addAlarmFab.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = fabBottomMargin + bottomInsets.bottom
-            }
+            binding.alarmsRecycler.updatePadding(
+                bottom = recyclerBottomPadding
+            )
+            binding.emptyState.updatePadding(
+                bottom = emptyStateBottomPadding
+            )
+            binding.bottomNav.updatePadding(bottom = bottomNavBottomPadding + bottomInsets.bottom)
             insets
         }
         ViewCompat.requestApplyInsets(binding.root)
@@ -88,6 +91,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(
                     Intent(this, EditAlarmActivity::class.java)
                         .putExtra(EditAlarmActivity.EXTRA_ALARM_ID, alarm.id)
+                        .putExtra(
+                            EditAlarmActivity.EXTRA_CREATE_MODE,
+                            if (alarm.triggerAtMillis != null) {
+                                EditAlarmActivity.MODE_TASK
+                            } else {
+                                EditAlarmActivity.MODE_ALARM
+                            }
+                        )
                 )
             },
             onLongClick = { alarm ->
@@ -103,16 +114,33 @@ class MainActivity : AppCompatActivity() {
         binding.alarmsRecycler.setHasFixedSize(true)
 
         binding.addAlarmFab.setOnClickListener {
-            startActivity(Intent(this, EditAlarmActivity::class.java))
+            startActivity(
+                Intent(this, EditAlarmActivity::class.java)
+                    .putExtra(
+                        EditAlarmActivity.EXTRA_CREATE_MODE,
+                        if (selectedTab == HomeTab.TASKS) {
+                            EditAlarmActivity.MODE_TASK
+                        } else {
+                            EditAlarmActivity.MODE_ALARM
+                        }
+                    )
+            )
         }
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            selectedTab = when (item.itemId) {
+                R.id.nav_tasks -> HomeTab.TASKS
+                else -> HomeTab.ALARMS
+            }
+            renderList()
+            true
+        }
+        binding.bottomNav.selectedItemId = R.id.nav_alarms
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.alarms.collect { list ->
-                    adapter.submitList(list)
-                    binding.emptyState.visibility =
-                        if (list.isEmpty()) View.VISIBLE else View.GONE
-                    binding.summaryText.text = buildSummary(list)
+                    latestAlarms = list
+                    renderList()
                 }
             }
         }
@@ -149,6 +177,31 @@ class MainActivity : AppCompatActivity() {
             enabledCount == 0 -> "All alarms are paused"
             enabledCount == 1 -> "1 alarm is ready"
             else -> "$enabledCount alarms are ready"
+        }
+    }
+
+    private fun renderList() {
+        val filtered = when (selectedTab) {
+            HomeTab.ALARMS -> latestAlarms.filter { it.triggerAtMillis == null }
+            HomeTab.TASKS -> latestAlarms.filter { it.triggerAtMillis != null }
+        }
+        adapter.submitList(filtered)
+        binding.emptyState.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
+        binding.summaryText.text = when (selectedTab) {
+            HomeTab.ALARMS -> buildSummary(filtered)
+            HomeTab.TASKS -> if (filtered.isEmpty()) "No tasks scheduled" else "${filtered.size} tasks scheduled"
+        }
+        binding.emptyText.text = when (selectedTab) {
+            HomeTab.ALARMS -> "Tap Create alarm to add a spoken alarm reminder."
+            HomeTab.TASKS -> "Tap Create task to add a task with date-time alarm sound."
+        }
+        binding.addAlarmFab.text = when (selectedTab) {
+            HomeTab.ALARMS -> "Create alarm"
+            HomeTab.TASKS -> "Create task"
+        }
+        binding.addAlarmFab.contentDescription = when (selectedTab) {
+            HomeTab.ALARMS -> "Create alarm"
+            HomeTab.TASKS -> "Create task"
         }
     }
 }

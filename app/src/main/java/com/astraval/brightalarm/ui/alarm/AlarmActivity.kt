@@ -4,8 +4,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.astraval.brightalarm.alarm.AlarmReceiver
 import com.astraval.brightalarm.alarm.AlarmScheduler
 import com.astraval.brightalarm.alarm.AlarmService
@@ -29,9 +33,11 @@ class AlarmActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         showOnLockScreen()
         binding = ActivityAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applySafeZoneInsets()
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() = Unit
         })
@@ -89,6 +95,26 @@ class AlarmActivity : AppCompatActivity() {
                         WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
             )
         }
+    }
+
+    private fun applySafeZoneInsets() {
+        val rootStart = binding.root.paddingLeft
+        val rootTop = binding.root.paddingTop
+        val rootEnd = binding.root.paddingRight
+        val rootBottom = binding.root.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = rootStart + bars.left,
+                top = rootTop + bars.top,
+                right = rootEnd + bars.right,
+                bottom = rootBottom + bars.bottom
+            )
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.root)
     }
 
     companion object {
